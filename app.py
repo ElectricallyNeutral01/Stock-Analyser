@@ -16,7 +16,7 @@ app.secret_key = os.environ.get("SESSION_SECRET", "default_secret_key")
 CORS(app)
 
 # Get API key from environment with fallback
-API_KEY = os.environ.get('ALPHA_VANTAGE_API_KEY', 'T4RJRZHG56YB1L7W')
+API_KEY = os.getenv("ALPHA_VANTAGE_API_KEY")
 
 def get_stock_data(symbol):
     """Fetch historical stock data from Alpha Vantage with intraday data."""
