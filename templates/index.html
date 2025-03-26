@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Comparison Tool with AI Analysis</title>
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js for visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-chart-line me-2"></i>Stock AI Analyzer
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0"><i class="fas fa-robot me-2"></i>AI Stock Comparison Tool</h4>
+                    </div>
+                    <div class="card-body">
+                        <p class="lead">Compare two stocks using our AI-powered analysis to help make better investment decisions.</p>
+                        
+                        <form id="compareForm" class="row g-3">
+                            <div class="col-md-5">
+                                <label for="stock1" class="form-label">First Stock</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-chart-line"></i></span>
+                                    <select class="form-select" id="stock1" required>
+                                        <option value="" selected disabled>Select a stock...</option>
+                                        <!-- Options will be populated by JavaScript -->
+                                    </select>
+                                </div>
+                                <div class="form-text">Select from popular stocks or type to search</div>
+                            </div>
+                            
+                            <div class="col-md-5">
+                                <label for="stock2" class="form-label">Second Stock</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-chart-line"></i></span>
+                                    <select class="form-select" id="stock2" required>
+                                        <option value="" selected disabled>Select a stock...</option>
+                                        <!-- Options will be populated by JavaScript -->
+                                    </select>
+                                </div>
+                                <div class="form-text">Select from popular stocks or type to search</div>
+                            </div>
+                            
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-balance-scale me-2"></i>Compare
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Loading indicator -->
+        <div id="loadingIndicator" class="row mb-4 d-none">
+            <div class="col-md-12 text-center">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="lead mt-2">Analyzing stocks with our AI model...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Error message display -->
+        <div id="errorMessage" class="row mb-4 d-none">
+            <div class="col-md-12">
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <span id="errorText"></span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Results section (hidden initially) - Optimized for VR viewing -->
+        <div id="resultsSection" class="d-none">
+            <!-- Main dashboard layout -->
+            <div class="row">
+                <!-- Left column - Summary and metrics -->
+                <div class="col-md-4">
+                    <!-- Comparison Summary -->
+                    <div class="card mb-3">
+                        <div class="card-header bg-success text-white py-2">
+                            <h5 class="mb-0"><i class="fas fa-award me-1"></i>Results</h5>
+                        </div>
+                        <div class="card-body py-2">
+                            <h6 class="text-center" id="comparisonTitle">Stock Comparison</h6>
+                            <div id="comparisonResult" class="alert alert-info py-1 mb-2 text-center small">
+                                <!-- Filled by JavaScript -->
+                            </div>
+                            
+                            <div class="d-flex justify-content-between mb-2">
+                                <div class="card bg-dark py-1 px-2 text-center" style="flex: 1;">
+                                    <h6 id="stock1Name" class="mb-0">Stock 1</h6>
+                                    <h4 id="stock1Score" class="mb-0">0</h4>
+                                </div>
+                                <div class="d-flex align-items-center mx-1">
+                                    <h6 class="mb-0">VS</h6>
+                                </div>
+                                <div class="card bg-dark py-1 px-2 text-center" style="flex: 1;">
+                                    <h6 id="stock2Name" class="mb-0">Stock 2</h6>
+                                    <h4 id="stock2Score" class="mb-0">0</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Key Metrics Comparison -->
+                    <div class="card mb-3">
+                        <div class="card-header bg-warning text-dark py-2">
+                            <h5 class="mb-0"><i class="fas fa-table me-1"></i>Key Metrics</h5>
+                        </div>
+                        <div class="card-body p-2">
+                            <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                                <table class="table table-sm table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Metric</th>
+                                            <th id="metricsStock1Name">Stock 1</th>
+                                            <th id="metricsStock2Name">Stock 2</th>
+                                            <th>Better</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="metricsTable" class="small">
+                                        <!-- Filled by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Middle column - Price chart and analysis factors -->
+                <div class="col-md-4">
+                    <!-- Stock Price Chart -->
+                    <div class="card mb-3">
+                        <div class="card-header bg-info text-white py-2">
+                            <h5 class="mb-0"><i class="fas fa-chart-line me-1"></i>Price History</h5>
+                        </div>
+                        <div class="card-body p-2">
+                            <div class="chart-container" style="position: relative; height:280px;">
+                                <canvas id="priceChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Analysis Factors -->
+                    <div class="card mb-3">
+                        <div class="card-header bg-primary text-white py-2">
+                            <h5 class="mb-0"><i class="fas fa-list-check me-1"></i>Analysis Factors</h5>
+                        </div>
+                        <div class="card-body p-2">
+                            <div class="table-responsive" style="max-height: 210px; overflow-y: auto;">
+                                <table class="table table-sm table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Factor</th>
+                                            <th>Winner</th>
+                                            <th>Explanation</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="factorsTable" class="small">
+                                        <!-- Filled by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right column - Volume chart and technical indicators -->
+                <div class="col-md-4">
+                    <!-- Volume Chart -->
+                    <div class="card mb-3">
+                        <div class="card-header bg-secondary text-white py-2">
+                            <h5 class="mb-0"><i class="fas fa-chart-bar me-1"></i>Trading Volume</h5>
+                        </div>
+                        <div class="card-body p-2">
+                            <div class="chart-container" style="position: relative; height:280px;">
+                                <canvas id="volumeChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Technical Indicators -->
+                    <div class="card mb-3">
+                        <div class="card-header bg-danger text-white py-2">
+                            <h5 class="mb-0"><i class="fas fa-signal me-1"></i>Intraday Performance</h5>
+                        </div>
+                        <div class="card-body p-2">
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <div class="card bg-dark h-100">
+                                        <div class="card-body p-2 text-center">
+                                            <h6 id="stock1NameIntra" class="mb-1">Stock 1</h6>
+                                            <div class="d-flex justify-content-between mb-1">
+                                                <small>Latest:</small>
+                                                <span id="stock1Latest" class="badge bg-info">$0.00</span>
+                                            </div>
+                                            <div class="d-flex justify-content-between mb-1">
+                                                <small>Change:</small>
+                                                <span id="stock1Change" class="badge bg-success">+0.00%</span>
+                                            </div>
+                                            <div class="d-flex justify-content-between">
+                                                <small>Volume:</small>
+                                                <span id="stock1Volume" class="badge bg-secondary">0</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="card bg-dark h-100">
+                                        <div class="card-body p-2 text-center">
+                                            <h6 id="stock2NameIntra" class="mb-1">Stock 2</h6>
+                                            <div class="d-flex justify-content-between mb-1">
+                                                <small>Latest:</small>
+                                                <span id="stock2Latest" class="badge bg-info">$0.00</span>
+                                            </div>
+                                            <div class="d-flex justify-content-between mb-1">
+                                                <small>Change:</small>
+                                                <span id="stock2Change" class="badge bg-success">+0.00%</span>
+                                            </div>
+                                            <div class="d-flex justify-content-between">
+                                                <small>Volume:</small>
+                                                <span id="stock2Volume" class="badge bg-secondary">0</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- About Section -->
+        <div id="about" class="row mb-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-dark">
+                        <h4 class="mb-0"><i class="fas fa-info-circle me-2"></i>About This Tool</h4>
+                    </div>
+                    <div class="card-body">
+                        <p>This stock comparison tool uses artificial intelligence to analyze and compare stocks based on historical data from Alpha Vantage API. The analysis considers multiple factors including:</p>
+                        <ul>
+                            <li><strong>Price Trends:</strong> Historical price movements and patterns</li>
+                            <li><strong>Volatility:</strong> How much the stock price fluctuates</li>
+                            <li><strong>Trading Volume:</strong> The liquidity and market interest in the stock</li>
+                            <li><strong>Daily Returns:</strong> The average daily price changes</li>
+                        </ul>
+                        <p class="mb-0">While our AI provides useful insights, always conduct your own research before making investment decisions.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5><i class="fas fa-chart-line me-2"></i>Stock AI Analyzer</h5>
+                    <p>An AI-powered stock comparison tool to assist with investment decisions.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p><small>Data provided by Alpha Vantage API</small></p>
+                    <p><small>&copy; 2023 Stock AI Analyzer</small></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="/static/js/chart-utils.js"></script>
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

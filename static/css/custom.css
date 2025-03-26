@@ -1,0 +1,168 @@
+/* Custom styles for Stock Comparison Tool - Optimized for VR */
+
+/* General styling */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+footer {
+    margin-top: auto;
+}
+
+/* Card enhancements for VR - reduced animations, more compact spacing */
+.card {
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    margin-bottom: 0.8rem;
+    /* Remove hover animations for VR */
+    transition: none;
+}
+
+.card-header {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    padding: 0.5rem 1rem;
+}
+
+.card-body {
+    padding: 0.75rem;
+}
+
+/* Results section optimizations for VR */
+#resultsSection .row {
+    margin-right: -0.5rem;
+    margin-left: -0.5rem;
+}
+
+#resultsSection .col-md-4 {
+    padding-right: 0.5rem;
+    padding-left: 0.5rem;
+}
+
+/* Chart containers */
+.chart-container {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    padding: 0.5rem;
+}
+
+/* Form enhancements */
+.form-control:focus {
+    box-shadow: 0 0 0 0.15rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+/* Table enhancements for VR - more compact */
+.table-responsive {
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.table-sm th, .table-sm td {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.85rem;
+}
+
+/* Optimize scrollbars for VR */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}
+
+/* Custom alert styles - more compact for VR */
+.alert {
+    border-radius: 6px;
+    padding: 0.5rem 0.75rem;
+}
+
+/* Loading spinner enhancements */
+.spinner-border {
+    width: 2rem;
+    height: 2rem;
+}
+
+/* Score display - adjusted for VR */
+#stock1Score, #stock2Score {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0;
+}
+
+/* Comparison title */
+#comparisonTitle {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+/* Navigation enhancements */
+.navbar-brand {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* About section styling */
+#about ul {
+    padding-left: 1.25rem;
+}
+
+#about li {
+    margin-bottom: 0.4rem;
+}
+
+/* VR-specific optimizations */
+/* Enhance contrast for better visibility */
+.bg-dark {
+    background-color: rgba(33, 37, 41, 0.95) !important;
+}
+
+/* Make text more readable in VR */
+body {
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+/* Improve badge visibility */
+.badge {
+    font-size: 0.8rem;
+    padding: 0.35em 0.65em;
+    font-weight: 600;
+    text-shadow: none;
+}
+
+/* Better input contrast */
+.input-group-text {
+    background-color: var(--bs-primary);
+    color: white;
+    border-color: var(--bs-primary);
+}
+
+/* Dashboard layout specific styles */
+.intraday-card {
+    min-height: 140px;
+}
+
+/* Optimize for dense information display */
+.small {
+    font-size: 0.85rem;
+}
+
+/* Mobile optimizations that also help in VR */
+@media (max-width: 768px) {
+    .card-body {
+        padding: 0.5rem;
+    }
+    
+    h5.mb-0 {
+        font-size: 1.1rem;
+    }
+}
